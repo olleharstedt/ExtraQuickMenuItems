@@ -1,96 +1,6 @@
 <?php 
 
 /**
- * Local exception
- */
-class QuickMenuException extends CException {}
-
-/**
- * Small class for buttons. Basically just an
- * array wrapper with some default values.
- *
- * Implements ArrayAccess so core code can
- * use it as an array.
- *
- * @todo Put this in core?
- */
-class QuickMenuButton implements ArrayAccess {
-    /**
-     * @var string - href in anchor
-     */
-    public $href;
-
-    /**
-     * @var string - String in tooltip. Empty string means no tooltip
-     */
-    public $tooltip = '';
-
-    /**
-     * @var string - Class with glyphicon
-     */
-    public $iconClass;
-
-    /**
-     * @var bool - Whether or not to open link in new tab
-     */
-    public $openInNewTab = false;
-
-    /**
-     * @var bool - Whether or not to show button only when survey is active
-     */
-    public $showOnlyWhenSurveyIsActivated = false;
-
-    /**
-     * @var bool - Whether or not to show button only when survey is non-active
-     */
-    public $showOnlyWhenSurveyIsDeactivated = false;
-
-    public function __construct($options) {
-        $this->href = $options['href'];
-        $this->tooltip = $options['tooltip'];
-        $this->iconClass = $options['iconClass'];
-
-        if (isset($options['openInNewTab'])) {
-            $this->openInNewTab = $options['openInNewTab'];
-        }
-
-        if (isset($options['showOnlyWhenSurveyIsActivated']))
-        {
-            $this->showOnlyWhenSurveyIsActivated = $options['showOnlyWhenSurveyIsActivated'];
-        }
-
-        if (isset($options['showOnlyWhenSurveyIsDeactivated']))
-        {
-            $this->showOnlyWhenSurveyIsDeactivated = $options['showOnlyWhenSurveyIsDeactivated'];
-        }
-    }
-
-    public function offsetExists($offset)
-    {
-        throw new QuickMenuException("Can't check if offset exists for QuickMenuButton");
-    }
-
-    /**
-     * @param mixed $offset
-     * @return mixed
-     */
-    public function offsetGet($offset)
-    {
-        return $this->$offset;
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        throw new QuickMenuException("Can't set offset for QuickMenuButton");
-    }
-
-    public function offsetUnset($offset)
-    {
-        throw new QuickMenuException("Can't unset offset for QuickMenuButton");
-    }
-}
-
-/**
  * Some extra quick-menu items to ease everyday usage
  *
  * @since 2016-04-22
@@ -111,11 +21,13 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
             'type' => 'checkbox',
             'label' => 'Activate survey&nbsp;<span class="glyphicon glyphicon-play"></span>',
             'default' => '0',
+            'help' => 'Needed permission: Survey activation - Update'
         ),
         'deactivateSurvey' => array(
             'type' => 'checkbox',
             'label' => 'Deactivate survey&nbsp;<span class="glyphicon glyphicon-stop"></span>',
             'default' => '0',
+            'help' => 'Needed permission: Survey activation - Update'
         ),
         'testSurvey' => array(
             'type' => 'checkbox',
@@ -126,21 +38,25 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
             'type' => 'checkbox',
             'label' => 'Survey settings&nbsp;<span class="glyphicon icon-edit"></span>',
             'default' => '1',
+            'help' => 'Needed permission: Survey settings - View'
         ),
         'tokenManagement' => array(
             'type' => 'checkbox',
             'label' => 'Token management&nbsp;<span class="glyphicon glyphicon-user"></span>',
             'default' => '1',
+            'help' => 'Needed permission: Token - View'
         ),
         'responses' => array(
             'type' => 'checkbox',
             'label' => 'Responses&nbsp;<span class="glyphicon icon-browse"></span>',
             'default' => '1',
+            'help' => 'Needed permission: Responses - View'
         ),
         'statistics' => array(
             'type' => 'checkbox',
             'label' => 'Statistics&nbsp;<span class="glyphicon glyphicon-stats"></span>',
             'default' => '1',
+            'help' => 'Needed permission: Statistics - View'
         )
     );
 
@@ -168,13 +84,15 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
                 'href' => Yii::app()->getController()->createUrl("admin/survey/sa/activate/surveyid/$surveyId"),
                 'tooltip' => gT('Activate survey'),
                 'iconClass' => 'glyphicon glyphicon-play navbar-brand',
-                'showOnlyWhenSurveyIsDeactivated' => true
+                'showOnlyWhenSurveyIsDeactivated' => true,
+                'neededPermission' => array('surveyactivation', 'update')
             )),
             'deactivateSurvey' => new QuickMenuButton(array(
                 'href' => Yii::app()->getController()->createUrl("admin/survey/sa/deactivate/surveyid/$surveyId"),
                 'tooltip' => gT('Stop this survey'),
                 'iconClass' => 'glyphicon glyphicon-stop navbar-brand',
-                'showOnlyWhenSurveyIsActivated' => true
+                'showOnlyWhenSurveyIsActivated' => true,
+                'neededPermission' => array('surveyactivation', 'update')
             )),
             'testSurvey' => new QuickMenuButton(array(
                 'openInNewTab' => true,
@@ -185,24 +103,28 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
             'surveySettings' => new QuickMenuButton(array(
                 'href' => Yii::app()->getController()->createUrl("admin/survey/sa/editlocalsettings/surveyid/$surveyId"),
                 'tooltip' => gT('General settings & texts'),
-                'iconClass' => 'glyphicon icon-edit navbar-brand'
+                'iconClass' => 'glyphicon icon-edit navbar-brand',
+                'neededPermission' => array('surveysettings', 'read')
             )),
             'tokenManagement' => new QuickMenuButton(array(
                 'href' => Yii::app()->getController()->createUrl("admin/tokens/sa/index/surveyid/$surveyId"),
                 'tooltip' => gT('Token management'),
-                'iconClass' => 'glyphicon glyphicon-user navbar-brand'
+                'iconClass' => 'glyphicon glyphicon-user navbar-brand',
+                'neededPermission' => array('tokens', 'read')
             )),
             'responses' => new QuickMenuButton(array(
-              'href' => Yii::app()->getController()->createUrl("admin/responses/sa/browse/surveyid/$surveyId/"),
-              'tooltip' => gT('Responses'),
-              'iconClass' => 'glyphicon icon-browse navbar-brand',
-              'showOnlyWhenSurveyIsActivated' => true
+                'href' => Yii::app()->getController()->createUrl("admin/responses/sa/browse/surveyid/$surveyId/"),
+                'tooltip' => gT('Responses'),
+                'iconClass' => 'glyphicon icon-browse navbar-brand',
+                'showOnlyWhenSurveyIsActivated' => true,
+                'neededPermission' => array('responses', 'read')
             )),
             'statistics' => new QuickMenuButton(array(
                 'href' => Yii::app()->getController()->createUrl("admin/statistics/sa/index/surveyid/$surveyId"),
                 'tooltip' => gT('Statistics'),
                 'iconClass' => 'glyphicon glyphicon-stats navbar-brand',
-              'showOnlyWhenSurveyIsActivated' => true
+                'showOnlyWhenSurveyIsActivated' => true,
+                'neededPermission' => array('statistics', 'read')
             ))
         );
 
@@ -218,13 +140,39 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
     }
 
     /**
+     * Check if user has permission to show this button
+     *
+     * @param int $surveyId
+     * @param QuickMenuButton $button
+     * @return bool
+     */
+    private function hasPermission($surveyId, $button)
+    {
+
+        // Check for permission to show button
+        if ($button['neededPermission'] !== null)
+        {
+            $hasPermission = Permission::model()->hasSurveyPermission(
+                $surveyId, 
+                $button['neededPermission'][0],
+                $button['neededPermission'][1]
+            );
+
+            return $hasPermission;
+        }
+
+        return true;
+    }
+
+    /**
      * Return list of buttons that will be shown for this page load
      *
+     * @param int $surveyId
      * @param bool $activated - True if survey is activated
      * @param array $settings - Plugin settings
      * @return array<QuickMenuButton>
      */
-    private function getButtonsToShow($activated, $settings)
+    private function getButtonsToShow($surveyId, $activated, $settings)
     {
         $buttonsToShow = array();
 
@@ -233,6 +181,12 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
         {
             if ($settings[$buttonName]['current'] === '1')
             {
+                if (!$this->hasPermission($surveyId, $button))
+                {
+                    continue;
+                }
+
+                // Check if survey is active and whether or not to show button
                 if ($button['showOnlyWhenSurveyIsActivated'] && $activated)
                 {
                     $buttonsToShow[] = $button;
@@ -259,9 +213,10 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
 
         $data = $event->get('aData');
         $activated = $data['activated'];
+        $surveyId = $data['surveyid'];
 
         $this->initialiseButtons($data);
-        $buttonsToShow = $this->getButtonsToShow($activated, $settings);
+        $buttonsToShow = $this->getButtonsToShow($surveyId, $activated, $settings);
 
         $event->set('quickMenuItems', $buttonsToShow);
     }
