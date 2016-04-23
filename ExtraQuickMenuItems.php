@@ -32,30 +32,61 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
         'testSurvey' => array(
             'type' => 'checkbox',
             'label' => 'Test or execute survey&nbsp;<span class="glyphicon glyphicon-cog"></span>',
-            'default' => '1',
+            'default' => '0',
+            'help' => 'Available for everyone. Uses survey base language.'
         ),
         'surveySettings' => array(
             'type' => 'checkbox',
             'label' => 'Survey settings&nbsp;<span class="glyphicon icon-edit"></span>',
-            'default' => '1',
+            'default' => '0',
             'help' => 'Needed permission: Survey settings - View'
+        ),
+        'surveySecurity' => array(
+            'type' => 'checkbox',
+            'label' => 'Survey security&nbsp;<span class="glyphicon icon-security"></span>',
+            'default' => '0',
+            'help' => 'Needed permission: Survey security - View'
+        ),
+        'quotas' => array(
+            'type' => 'checkbox',
+            'label' => 'Quotas&nbsp;<span class="glyphicon icon-quota"></span>',
+            'default' => '0',
+            'help' => 'Needed permission: Quotas - View'
+        ),
+        'assessments' => array(
+            'type' => 'checkbox',
+            'label' => 'Assessments&nbsp;<span class="glyphicon icon-assessments"></span>',
+            'default' => '0',
+            'help' => 'Needed permission: Assessments - View'
+        ),
+        'emailTemplates' => array(
+            'type' => 'checkbox',
+            'label' => 'E-mail templates&nbsp;<span class="glyphicon icon-emailtemplates"></span>',
+            'default' => '0',
+            'help' => 'Needed permission: Locale - View'
+        ),
+        'surveyLogicFile' => array(
+            'type' => 'checkbox',
+            'label' => 'Survey logic file&nbsp;<span class="glyphicon icon-expressionmanagercheck"></span>',
+            'default' => '0',
+            'help' => 'Needed permission: Survey content - View. Uses survey base language.'
         ),
         'tokenManagement' => array(
             'type' => 'checkbox',
             'label' => 'Token management&nbsp;<span class="glyphicon glyphicon-user"></span>',
-            'default' => '1',
+            'default' => '0',
             'help' => 'Needed permission: Token - View'
         ),
         'responses' => array(
             'type' => 'checkbox',
             'label' => 'Responses&nbsp;<span class="glyphicon icon-browse"></span>',
-            'default' => '1',
+            'default' => '0',
             'help' => 'Needed permission: Responses - View'
         ),
         'statistics' => array(
             'type' => 'checkbox',
             'label' => 'Statistics&nbsp;<span class="glyphicon glyphicon-stats"></span>',
-            'default' => '1',
+            'default' => '0',
             'help' => 'Needed permission: Statistics - View'
         )
     );
@@ -106,6 +137,36 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
                 'iconClass' => 'glyphicon icon-edit navbar-brand',
                 'neededPermission' => array('surveysettings', 'read')
             )),
+            'surveySecurity' => new QuickMenuButton(array(
+                'href' => Yii::app()->getController()->createUrl("admin/surveypermission/sa/view/surveyid/$surveyId"),
+                'tooltip' => gT('Survey permissions'),
+                'iconClass' => 'glyphicon icon-security navbar-brand',
+                'neededPermission' => array('surveysecurity', 'read')
+            )),
+            'quotas' => new QuickMenuButton(array(
+                'href' => Yii::app()->getController()->createUrl("admin/quotas/sa/view/surveyid/$surveyId"),
+                'tooltip' => gT('Quotas'),
+                'iconClass' => 'glyphicon icon-quota navbar-brand',
+                'neededPermission' => array('quotas', 'read')
+            )),
+            'assessments' => new QuickMenuButton(array(
+                'href' => Yii::app()->getController()->createUrl("admin/assessments/sa/view/surveyid/$surveyId"),
+                'tooltip' => gT('Assessments'),
+                'iconClass' => 'glyphicon icon-assessments navbar-brand',
+                'neededPermission' => array('assessments', 'read')
+            )),
+            'emailTemplates' => new QuickMenuButton(array(
+                'href' => Yii::app()->getController()->createUrl("admin/emailtemplates/sa/view/surveyid/$surveyId"),
+                'tooltip' => gT('E-mail templates'),
+                'iconClass' => 'glyphicon icon-emailtemplates navbar-brand',
+                'neededPermission' => array('surveylocale', 'read')
+            )),
+            'surveyLogicFile' => new QuickMenuButton(array(
+                'href' => Yii::app()->getController()->createUrl("admin/expressions/sa/survey_logic_file/sid/$surveyId/"),
+                'tooltip' => gT('Survey logic file'),
+                'iconClass' => 'glyphicon icon-expressionmanagercheck navbar-brand',
+                'neededPermission' => array('surveycontent', 'read')
+            )),
             'tokenManagement' => new QuickMenuButton(array(
                 'href' => Yii::app()->getController()->createUrl("admin/tokens/sa/index/surveyid/$surveyId"),
                 'tooltip' => gT('Token management'),
@@ -148,7 +209,6 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
      */
     private function hasPermission($surveyId, $button)
     {
-
         // Check for permission to show button
         if ($button['neededPermission'] !== null)
         {
