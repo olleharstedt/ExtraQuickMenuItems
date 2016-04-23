@@ -193,7 +193,7 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
                 'iconClass' => 'glyphicon glyphicon-user navbar-brand'
             )),
             'responses' => new QuickMenuButton(array(
-              'href' => Yii::app()->getController()->createUrl("admin/responses/sa/index/surveyid/$surveyId/"),
+              'href' => Yii::app()->getController()->createUrl("admin/responses/sa/browse/surveyid/$surveyId/"),
               'tooltip' => gT('Responses'),
               'iconClass' => 'glyphicon icon-browse navbar-brand',
               'showOnlyWhenSurveyIsActivated' => true
