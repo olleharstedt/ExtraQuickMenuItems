@@ -5,7 +5,6 @@ What buttons to show can be configured in the Plugin Manager. Some buttons will 
 Requirements:
 
 * LimeSurvey 2.5
-* PHP >= 5
 
 How it looks:
 
