@@ -35,6 +35,18 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
             'default' => '0',
             'help' => 'Available for everyone. Uses survey base language.'
         ),
+        'listQuestions' => array(
+            'type' => 'checkbox',
+            'label' => 'List questions&nbsp;<span class="glyphicon glyphicon-list"></span>',
+            'default' => '0',
+            'help' => 'Needed permission: Survey content - View'
+        ),
+        'listQuestionGroups' => array(
+            'type' => 'checkbox',
+            'label' => 'List question groups&nbsp;<span class="glyphicon glyphicon-list"></span>',
+            'default' => '0',
+            'help' => 'Needed permission: Survey content - View'
+        ),
         'surveySettings' => array(
             'type' => 'checkbox',
             'label' => 'Survey settings&nbsp;<span class="glyphicon icon-edit"></span>',
@@ -76,6 +88,12 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
             'label' => 'Token management&nbsp;<span class="glyphicon glyphicon-user"></span>',
             'default' => '0',
             'help' => 'Needed permission: Token - View'
+        ),
+        'cpdb' => array(
+            'type' => 'checkbox',
+            'label' => 'Central participant database&nbsp;<span class="fa fa-users"></span>',
+            'default' => '0',
+            'help' => 'Needed permission: ?'
         ),
         'responses' => array(
             'type' => 'checkbox',
@@ -131,6 +149,18 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
                 'tooltip' => $activated ? gT('Execute survey') : gT('Test survey'),
                 'iconClass' => 'glyphicon glyphicon-cog navbar-brand'
             )),
+            'listQuestions' => new QuickMenuButton(array(
+                'href' => Yii::app()->createUrl("admin/survey/sa/listquestions/surveyid/$surveyId"),
+                'tooltip' => gT('List questions'),
+                'iconClass' => 'glyphicon glyphicon-list navbar-brand',
+                'neededPermission' => array('surveycontent', 'read')
+            )),
+            'listQuestionGroups' => new QuickMenuButton(array(
+                'href' => Yii::app()->createUrl("admin/survey/sa/listquestiongroups/surveyid/$surveyId"),
+                'tooltip' => gT('List question groups'),
+                'iconClass' => 'glyphicon glyphicon-list navbar-brand',
+                'neededPermission' => array('surveycontent', 'read')
+            )),
             'surveySettings' => new QuickMenuButton(array(
                 'href' => Yii::app()->getController()->createUrl("admin/survey/sa/editlocalsettings/surveyid/$surveyId"),
                 'tooltip' => gT('General settings & texts'),
@@ -171,6 +201,12 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
                 'href' => Yii::app()->getController()->createUrl("admin/tokens/sa/index/surveyid/$surveyId"),
                 'tooltip' => gT('Token management'),
                 'iconClass' => 'glyphicon glyphicon-user navbar-brand',
+                'neededPermission' => array('tokens', 'read')
+            )),
+            'cpdb' => new QuickMenuButton(array(
+                'href' => Yii::app()->getController()->createUrl("admin/participants/sa/displayParticipants"),
+                'tooltip' => gT('Central participant database'),
+                'iconClass' => 'fa fa-users navbar-brand',
                 'neededPermission' => array('tokens', 'read')
             )),
             'responses' => new QuickMenuButton(array(
