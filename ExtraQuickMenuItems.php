@@ -31,7 +31,7 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
         ),
         'testSurvey' => array(
             'type' => 'checkbox',
-            'label' => 'Test or execute survey&nbsp;<span class="fa fa-flask"></span>',
+            'label' => 'Test or execute survey&nbsp;<span class="glyphicon glyphicon-cog"></span>',
             'default' => '0',
             'help' => 'Available for everyone. Uses survey base language.'
         ),
@@ -147,7 +147,7 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
                 'openInNewTab' => true,
                 'href' => Yii::app()->getController()->createUrl("survey/index/sid/$surveyId/newtest/Y/lang/$baselang"),
                 'tooltip' => $activated ? gT('Execute survey') : gT('Test survey'),
-                'iconClass' => 'fa fa-flask navbar-brand'
+                'iconClass' => 'glyphicon glyphicon-cog navbar-brand'
             )),
             'listQuestions' => new QuickMenuButton(array(
                 'href' => Yii::app()->createUrl("admin/survey/sa/listquestions/surveyid/$surveyId"),
