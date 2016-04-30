@@ -106,6 +106,12 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
             'label' => 'Statistics&nbsp;<span class="glyphicon glyphicon-stats"></span>',
             'default' => '0',
             'help' => 'Needed permission: Statistics - View'
+        ),
+        'reorder' => array(
+            'type' => 'checkbox',
+            'label' => 'Reorder questions and question groups&nbsp;<span class="icon-organize"></span>',
+            'default' => 0,
+            'help' => 'Needed permission: Survey content - Update'
         )
     );
 
@@ -222,6 +228,13 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
                 'iconClass' => 'glyphicon glyphicon-stats navbar-brand',
                 'showOnlyWhenSurveyIsActivated' => true,
                 'neededPermission' => array('statistics', 'read')
+            )),
+            'reorder' => new QuickMenuButton(array(
+                'href' =>Yii::app()->getController()->createUrl("admin/survey/sa/organize/surveyid/$surveyId"),
+                'tooltip' => gT('Reorder questions/question groups'),
+                'iconClass' => 'icon-organize',
+                'showOnlyWhenSurveyIsDeactivated' => true,
+                'neededPermission' => array('surveycontent', 'update')
             ))
         );
 
