@@ -327,7 +327,7 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
         $this->initialiseButtons($data);
         $buttonsToShow = $this->getButtonsToShow($surveyId, $activated, $settings);
 
-        $event->set('quickMenuItems', $buttonsToShow);
+        $event->append('quickMenuItems', $buttonsToShow);
     }
 }
 
