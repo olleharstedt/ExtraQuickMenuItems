@@ -122,6 +122,7 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
         $this->subscribe('afterQuickMenuLoad');
         $this->subscribe('beforeActivate');
         $this->subscribe('beforeDeactivate');
+        $this->subscribe('newDirectRequest');
     }
 
     /**
@@ -225,6 +226,7 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
 
         $this->buttons = array(
             'activateSurvey' => new QuickMenuButton(array(
+                'name' => 'activateSurvey',
                 'href' => Yii::app()->getController()->createUrl("admin/survey/sa/activate/surveyid/$surveyId"),
                 'tooltip' => gT('Activate survey'),
                 'iconClass' => 'glyphicon glyphicon-play navbar-brand',
@@ -232,6 +234,7 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
                 'neededPermission' => array('surveyactivation', 'update')
             )),
             'deactivateSurvey' => new QuickMenuButton(array(
+                'name' => 'deactivateSurvey',
                 'href' => Yii::app()->getController()->createUrl("admin/survey/sa/deactivate/surveyid/$surveyId"),
                 'tooltip' => gT('Stop this survey'),
                 'iconClass' => 'glyphicon glyphicon-stop navbar-brand',
@@ -239,72 +242,84 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
                 'neededPermission' => array('surveyactivation', 'update')
             )),
             'testSurvey' => new QuickMenuButton(array(
+                'name' => 'testSurvey',
                 'openInNewTab' => true,
                 'href' => Yii::app()->getController()->createUrl("survey/index/sid/$surveyId/newtest/Y/lang/$baselang"),
                 'tooltip' => $activated ? gT('Execute survey') : gT('Test survey'),
                 'iconClass' => 'glyphicon glyphicon-cog navbar-brand'
             )),
             'listQuestions' => new QuickMenuButton(array(
+                'name' => 'listQuestions',
                 'href' => Yii::app()->createUrl("admin/survey/sa/listquestions/surveyid/$surveyId"),
                 'tooltip' => gT('List questions'),
                 'iconClass' => 'glyphicon glyphicon-list navbar-brand',
                 'neededPermission' => array('surveycontent', 'read')
             )),
             'listQuestionGroups' => new QuickMenuButton(array(
+                'name' => 'listQuestionGroups',
                 'href' => Yii::app()->createUrl("admin/survey/sa/listquestiongroups/surveyid/$surveyId"),
                 'tooltip' => gT('List question groups'),
                 'iconClass' => 'glyphicon glyphicon-list navbar-brand',
                 'neededPermission' => array('surveycontent', 'read')
             )),
             'surveySettings' => new QuickMenuButton(array(
+                'name' => 'surveySettings',
                 'href' => Yii::app()->getController()->createUrl("admin/survey/sa/editlocalsettings/surveyid/$surveyId"),
                 'tooltip' => gT('General settings & texts'),
                 'iconClass' => 'glyphicon icon-edit navbar-brand',
                 'neededPermission' => array('surveysettings', 'read')
             )),
             'surveySecurity' => new QuickMenuButton(array(
+                'name' => 'surveySecurity',
                 'href' => Yii::app()->getController()->createUrl("admin/surveypermission/sa/view/surveyid/$surveyId"),
                 'tooltip' => gT('Survey permissions'),
                 'iconClass' => 'glyphicon icon-security navbar-brand',
                 'neededPermission' => array('surveysecurity', 'read')
             )),
             'quotas' => new QuickMenuButton(array(
+                'name' => 'quotas',
                 'href' => Yii::app()->getController()->createUrl("admin/quotas/sa/view/surveyid/$surveyId"),
                 'tooltip' => gT('Quotas'),
                 'iconClass' => 'glyphicon icon-quota navbar-brand',
                 'neededPermission' => array('quotas', 'read')
             )),
             'assessments' => new QuickMenuButton(array(
+                'name' => 'assessments',
                 'href' => Yii::app()->getController()->createUrl("admin/assessments/sa/view/surveyid/$surveyId"),
                 'tooltip' => gT('Assessments'),
                 'iconClass' => 'glyphicon icon-assessments navbar-brand',
                 'neededPermission' => array('assessments', 'read')
             )),
             'emailTemplates' => new QuickMenuButton(array(
+                'name' => 'emailTemplates',
                 'href' => Yii::app()->getController()->createUrl("admin/emailtemplates/sa/view/surveyid/$surveyId"),
                 'tooltip' => gT('E-mail templates'),
                 'iconClass' => 'glyphicon icon-emailtemplates navbar-brand',
                 'neededPermission' => array('surveylocale', 'read')
             )),
             'surveyLogicFile' => new QuickMenuButton(array(
+                'name' => 'surveyLogicFile',
                 'href' => Yii::app()->getController()->createUrl("admin/expressions/sa/survey_logic_file/sid/$surveyId/"),
                 'tooltip' => gT('Survey logic file'),
                 'iconClass' => 'glyphicon icon-expressionmanagercheck navbar-brand',
                 'neededPermission' => array('surveycontent', 'read')
             )),
             'tokenManagement' => new QuickMenuButton(array(
+                'name' => 'tokenManagement',
                 'href' => Yii::app()->getController()->createUrl("admin/tokens/sa/index/surveyid/$surveyId"),
                 'tooltip' => gT('Token management'),
                 'iconClass' => 'glyphicon glyphicon-user navbar-brand',
                 'neededPermission' => array('tokens', 'read')
             )),
             'cpdb' => new QuickMenuButton(array(
+                'name' => 'cpdb',
                 'href' => Yii::app()->getController()->createUrl("admin/participants/sa/displayParticipants"),
                 'tooltip' => gT('Central participant database'),
                 'iconClass' => 'fa fa-users navbar-brand',
                 'neededPermission' => array('tokens', 'read')
             )),
             'responses' => new QuickMenuButton(array(
+                'name' => 'responses',
                 'href' => Yii::app()->getController()->createUrl("admin/responses/sa/browse/surveyid/$surveyId/"),
                 'tooltip' => gT('Responses'),
                 'iconClass' => 'glyphicon icon-browse navbar-brand',
@@ -312,6 +327,8 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
                 'neededPermission' => array('responses', 'read')
             )),
             'statistics' => new QuickMenuButton(array(
+                'name' => 'statistics',
+                'href' => Yii::app()->getController()->createUrl("admin/responses/sa/browse/surveyid/$surveyId/"),
                 'href' => Yii::app()->getController()->createUrl("admin/statistics/sa/index/surveyid/$surveyId"),
                 'tooltip' => gT('Statistics'),
                 'iconClass' => 'glyphicon glyphicon-stats navbar-brand',
@@ -319,6 +336,7 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
                 'neededPermission' => array('statistics', 'read')
             )),
             'reorder' => new QuickMenuButton(array(
+                'name' => 'reorder',
                 'href' =>Yii::app()->getController()->createUrl("admin/survey/sa/organize/surveyid/$surveyId"),
                 'tooltip' => gT('Reorder questions/question groups'),
                 'iconClass' => 'icon-organize',
@@ -387,16 +405,16 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
                 // Check if survey is active and whether or not to show button
                 if ($button['showOnlyWhenSurveyIsActivated'] && $activated)
                 {
-                    $buttonsToShow[] = $button;
+                    $buttonsToShow[$buttonName] = $button;
                 }
                 elseif ($button['showOnlyWhenSurveyIsDeactivated'] && !$activated)
                 {
-                    $buttonsToShow[] = $button;
+                    $buttonsToShow[$buttonName] = $button;
                 }
                 elseif (!$button['showOnlyWhenSurveyIsActivated'] &&
                         !$button['showOnlyWhenSurveyIsDeactivated'])
                 {
-                    $buttonsToShow[] = $button;
+                    $buttonsToShow[$buttonName] = $button;
                 }
             }
         }
@@ -416,7 +434,128 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
         $this->initialiseButtons($data);
         $buttonsToShow = $this->getButtonsToShow($surveyId, $activated, $settings);
 
+        $userId = Yii::app()->user->getId();
+
+        $buttonOrders = self::getOrder($userId);
+
+        foreach ($buttonsToShow as $button)
+        {
+            if (isset($buttonOrders[$button['name']]))
+            {
+                $button->setOrder($buttonOrders[$button['name']]);
+            }
+        }
+
         $event->append('quickMenuItems', $buttonsToShow);
     }
-}
 
+    /**
+     *  Save order after drag-n-drop sorting
+     *
+     *  @param LSHttpRequest $request
+     *  @return void
+     */
+    public function saveOrder(LSHttpRequest $request)
+    {
+        $buttons = $request->getParam('buttons');
+
+        $userId = Yii::app()->user->getId();
+
+        try
+        {
+            $this->deleteOldSortings($userId);
+            $this->insertNewSortings($userId, $buttons);
+        }
+        catch(Exception $ex)
+        {
+            // Any error is sent as JSON to client
+            return json_encode(array(
+                'result' => 'error',
+                'message' => $ex->getMessage()
+            ));
+        }
+
+        return json_encode(array('result' => 'success'));
+    }
+
+    /**
+     * Delete all old button sortings for the user
+     *
+     * @param int $userId
+     * @return void
+     */
+    protected function deleteOldSortings($userId)
+    {
+        // Delete all old sortings
+        $db = Yii::app()->db;
+        $db->createCommand()
+            ->delete(
+                '{{plugin_extraquickmenuitems_sortorder}}',
+                'uid=:uid',
+                array(':uid' => $userId)
+            );
+
+    }
+
+    /**
+     * Insert new button sortings
+     *
+     * @param int $userId
+     * @param array<string, int> $buttons - button name => sorting index
+     */
+    protected function insertNewSortings($userId, $buttons)
+    {
+        $db = Yii::app()->db;
+        foreach ($buttons as $buttonName => $buttonIndex)
+        {
+            $db->createCommand()->insert(
+                '{{plugin_extraquickmenuitems_sortorder}}',
+                array(
+                    'uid' => $userId,
+                    'button_name' => $buttonName,
+                    'sort_order' => $buttonIndex)
+            );
+        }
+
+    }
+
+    /**
+     * Get sort order of buttons from database
+     *
+     * @param int $uid
+     * @return array
+     */
+    public static function getOrder($userId)
+    {
+        $db = Yii::app()->db;
+        $orders = $db->createCommand()
+            ->select(array('button_name', 'sort_order'))
+            ->from('{{plugin_extraquickmenuitems_sortorder}}')
+            ->where('uid=:uid', array(':uid' => $userId))
+            ->order('sort_order')
+            ->queryAll();
+        $result = array();
+        foreach ($orders as $ordering)
+        {
+            $result[$ordering['button_name']] = $ordering['sort_order'];
+        }
+        return $result;
+    }
+
+    public function newDirectRequest()
+    {
+        $event = $this->event;
+        if ($event->get('target') == "ExtraQuickMenuItems")
+        {
+            // you can get other params from the request object
+            $request = $event->get('request');
+
+            //get the function name to call and use the method call_user_func
+            $functionToCall = $event->get('function'); 
+            //$content = call_user_func(array($this,$functionToCall), $surveyId);
+            //set the content on the event
+            //$event->setContent($this, $content);
+            echo $this->$functionToCall($request);
+        }
+    }
+}

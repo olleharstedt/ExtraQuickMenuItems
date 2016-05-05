@@ -31,6 +31,16 @@ class QuickMenuButton implements ArrayAccess {
     public $iconClass;
 
     /**
+     * @var string - Button name
+     */
+    public $name;
+
+    /**
+     * @var int - Order sorting
+     */
+    public $order = 0;
+
+    /**
      * @var bool - Whether or not to open link in new tab
      */
     public $openInNewTab = false;
@@ -61,6 +71,7 @@ class QuickMenuButton implements ArrayAccess {
         $this->href = $options['href'];
         $this->tooltip = $options['tooltip'];
         $this->iconClass = $options['iconClass'];
+        $this->name = $options['name'];
 
         if (isset($options['openInNewTab'])) {
             $this->openInNewTab = $options['openInNewTab'];
@@ -85,6 +96,11 @@ class QuickMenuButton implements ArrayAccess {
 
           $this->neededPermission = $options['neededPermission'];
         }
+    }
+
+    public function setOrder($order)
+    {
+        $this->order = $order;
     }
 
     public function offsetExists($offset)
