@@ -120,7 +120,96 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
     public function init()
     {
         $this->subscribe('afterQuickMenuLoad');
+        $this->subscribe('beforeActivate');
+        $this->subscribe('beforeDeactivate');
     }
+
+    /**
+     * At activation, create database for
+     * quick-menu items sort order
+     */
+    public function beforeActivate()
+    {
+        $oDB = Yii::app()->getDb();
+        $oDB->schemaCachingDuration=0; // Deactivate schema caching
+        $oTransaction = $oDB->beginTransaction();
+        try
+        {
+            $aFields = array(
+                'uid' => 'integer NOT NULL',
+                'button_name' => 'string(64)',
+                'sort_order' => 'integer',
+                'PRIMARY KEY (button_name, uid)'
+            );
+            $oDB->createCommand()->createTable('{{plugin_extraquickmenuitems_sortorder}}', $aFields);
+            $oDB->createCommand()->addForeignKey(
+                'fk_survey_id',
+                '{{plugin_extraquickmenuitems_sortorder}}',
+                'uid',
+                '{{users}}',
+                'uid',
+                'CASCADE',
+                'CASCADE'
+            );
+            $oTransaction->commit();
+        }
+        catch(Exception $e)
+        {
+            $oTransaction->rollback();
+            // Activate schema caching
+            $oDB->schemaCachingDuration = 3600;
+            // Load all tables of the application in the schema
+            $oDB->schema->getTables();
+            // Clear the cache of all loaded tables
+            $oDB->schema->refresh();
+            $event = $this->getEvent();
+            $event->set('success', false);
+            $event->set(
+                'message',
+                gT('An non-recoverable error happened during the update. Error details:')
+                . "<p>"
+                . htmlspecialchars($e->getMessage())
+                . "</p>"
+            );
+            return;
+        }
+    }
+
+    /**
+     * Remove database tables at deactivation
+     */
+    public function beforeDeactivate()
+    {
+        // Remove table
+        $oDB = Yii::app()->getDb();
+        $oDB->schemaCachingDuration=0; // Deactivate schema caching
+        $oTransaction = $oDB->beginTransaction();
+        try
+        {
+            $oDB->createCommand()->dropTable('{{plugin_extraquickmenuitems_sortorder}}');
+            $oTransaction->commit();
+        }
+        catch(Exception $e)
+        {
+            $oTransaction->rollback();
+            // Activate schema caching
+            $oDB->schemaCachingDuration = 3600;
+            // Load all tables of the application in the schema
+            $oDB->schema->getTables();
+            // Clear the cache of all loaded tables
+            $oDB->schema->refresh();
+            $event = $this->getEvent();
+            $event->set(
+                'message',
+                gT('An non-recoverable error happened during the update. Error details:')
+                . "<p>"
+                . htmlspecialchars($e->getMessage())
+                . '</p>'
+            );
+            return;
+        }
+    }
+
 
     /**
      * @param array $data
