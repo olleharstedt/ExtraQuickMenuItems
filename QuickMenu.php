@@ -6,10 +6,10 @@
  * @since 2016-04-22
  * @author Olle Härstedt
  */
-class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
+class QuickMenu extends \ls\pluginmanager\PluginBase
 {
-    static protected $description = 'Extra buttons in the quick-menu';
-    static protected $name = 'ExtraQuickMenuItems';
+    static protected $description = 'Add a quick-menu when the question explorer is collapsed';
+    static protected $name = 'QuickMenu';
 
     protected $storage = 'DbStorage';
     protected $settings = array(
@@ -545,7 +545,7 @@ class ExtraQuickMenuItems extends \ls\pluginmanager\PluginBase
     public function newDirectRequest()
     {
         $event = $this->event;
-        if ($event->get('target') == "ExtraQuickMenuItems")
+        if ($event->get('target') == "QuickMenu")
         {
             // you can get other params from the request object
             $request = $event->get('request');
